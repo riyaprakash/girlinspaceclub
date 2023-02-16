@@ -8,35 +8,11 @@ from streamlit.components.v1 import html
 ##from streamlit_extras.switch_page_button import switch_page
 from streamlit.source_util import get_pages
 
-def nav_page(page_name, timeout_secs=3):
-     #links is the array, window is the page you are currently on, accessing the parent file of the customization page(pages folder) 
-    nav_script = """
-        <script type="text/javascript">
-            function attempt_nav_page(page_name, start_time, timeout_secs) {
-                var links = window.parents.document.getElementsByTagName("a");
-                for (var i = 0; i < links.length; i++) {
-                    if (links[i].href.toLowerCase().endsWith("/" + page_name.toLowerCase())) {
-                        links[i].click();
-                        return;
-                    }
-                }
-                var elasped = new Date() - start_time;
-                if (elasped < timeout_secs * 1000) {
-                    setTimeout(attempt_nav_page, 100, page_name, start_time, timeout_secs);
-                } else {
-                    alert("Unable to navigate to page '" + page_name + "' after " + timeout_secs + " second(s).");
-                }
-            }
-            window.addEventListener("load", function() {
-                attempt_nav_page("%s", new Date(), %d);
-            });
-        </script>
-    """ % (page_name, timeout_secs)
-    html(nav_script)
-
+##Adds balloons on screen when order is added to cart
 def balloons():
     st.balloons()
 
+##allows users to navigate through pages using buttons instead of sidebar
 def switch_page(page_name: str):
     from streamlit.runtime.scriptrunner import RerunData, RerunException
     from streamlit.source_util import get_pages
@@ -81,11 +57,12 @@ st.write("---")
 
 leftcol,rightcol = st.columns([8,7], gap="large");
 
-
-##filepath = f"Orders.csv"
+##flight suit model on left side of the screen
 with leftcol:
     st.write("##")
     st.image(image)
+
+##tabs on right side of the screen
 with rightcol:
     # ---- SIZING PREFERENCE ----
     tab1, tab2, tab3 = st.tabs(["Sizing", "Suit Color", "Patches"])
@@ -95,84 +72,36 @@ with rightcol:
             ##Print size questions 
             st.header("Sizing Preference")
             st.write("##")
+
+            ##prints size chart in expander
             size_chart=pd.read_csv('Sizing_Chart.csv')
             with st.expander("Size Chart"):
                 st.write(size_chart.head(7))
 
+            ##dropdown that appears before custom or standard options
             choice = st.selectbox("Do you want to purchase a space suit with custom measurements or with standard sizing?", ["-", "Custom", "Standard"])
+            
+            ##If user chooses custom measurements
             if 'Custom' in choice:
                  with st.form("custom", clear_on_submit=True):
-
-                    ##If user chooses custom measurements
+                    
+                    ##unit of measurement
                     add_col1 = st.selectbox('What is your preferred unit of measurement?',('cm', 'in'))
 
-                    ##If user chooses cm then convert the answers to inches
-                    ##add min and max values!!!
                     add_col2 = st.number_input('Enter Height',0,500)
                     add_col3 = st.number_input('Enter Chest',0,500)
                     add_col4 = st.number_input('Enter Waist',0,500)
                     add_col5 = st.number_input('Enter Total Arm Length',0,500)
                     add_col6 = st.number_input('Enter Inseam',0,500)
                     add_col7 = st.number_input('Enter Body Length',0,500)
-                    
-                    if st.form_submit_button("Save"):
-                        st.write(pd.DataFrame({
-                        'first column': [1, 2, 3, 4],
-                        'second column': [10, 20, 30, 40],
-                        }))
-                        ##file= "Orders1.csv"
-                        ##headerList = ['col1', 'col2', 'col3', 'col4']
-  
-                        # open CSV file and assign header
-                        ##with open("Orders.csv", 'w') as file:
-                            ##dw = csv.DictWriter(file, delimiter=',', 
-                                                ##fieldnames=headerList)
-                            ##dw.writeheader()
-                        # display csv file
-                        ##fileContent = pd.read_csv("Orders.csv")
-                        ##fileContent
-                        ##dff = pd.read_csv("Orders1.csv")
-                        ##st.write(dff)
+                    st.form_submit_button("Save")
 
-                        ##df=df.append(new_data, ignore_index = True)
-                        ##open('Orders.csv', 'w').write(df.to_csv())
-                        ##fake_data = [{'Unit': 'cm', 'Height' : '1', 'Chest': '2', 'Waist': '3', 'Total Arm Length': '4', 'Inseam': '5', 'Body Length': '6'},
-                        ##{'Unit': 'in', 'Height': '11', 'Chest': '22', 'Waist': '33', 'Total Arm Length': '44', 'Inseam': '55', 'Body Length': '66'}]
-                        rows = [ ['Nikhil', 'COE', '2', '9.0'], 
-                        ['Sanchit', 'COE', '2', '9.1'], 
-                        ['Aditya', 'IT', '2', '9.3'], 
-                        ['Sagar', 'SE', '1', '9.5'], 
-                        ['Prateek', 'MCE', '3', '7.8'], 
-                        ['Sahil', 'EP', '2', '9.1']] 
-                        ##custom = {'Unit': [add_col1], 'Height': [add_col2], 'Chest': [add_col3], 'Waist': [add_col4], 'Total Arm Length': [add_col5], 'Inseam': [add_col6], 'Body Length': [add_col7]}
-                       ##fields = ['Unit', 'Height', 'Chest', 'Waist', 'Total Arm Length', 'Inseam', 'Body Length']
-                        ##with open('Orders.csv', 'w', newline='') as file: 
-                            ##w = csv.writer(file)
-
-                            ##w.writeheader() 
-
-                            ##w.writerows(rows)
-                            ##file.close()
-
-                        f = open("Orders.csv", "wb")
-                        w = csv.writer(f)
-                        w.writerows(rows)
-                        f.close()
-                        ##table=st.dataframe()
-                        ##df=pd.DataFrame(header)
-                        ##st.write("Hello")
-
+            ##if user chooses standard slizes
             if 'Standard' in choice:
                 with st.form("standard"):
                     ##If user chooses standard sizing
                     add_col1 = st.selectbox("Which size suit do you want to purchase?",("XXS", "XS", "S", "M", "L", "XL"))
                     st.form_submit_button("Save")
-
-                    new_data = {'col1': add_col1}
-
-                    
-                
-
 
 
     # ---- SUIT COLOR ----
@@ -200,12 +129,12 @@ with rightcol:
             st.checkbox("2 circular patches (diameter 3.75': right chest, left arm")
             st.checkbox("1 rectangular patch (2 x 4): left chest")
              #display balloons on button click
-            patches.form_submit_button("Save", on_click= balloons)
+            patches.form_submit_button("Save")
  
  
     # ---- FINISH ORDERING ----
     st.text_input(" ", placeholder="Name your Order")
-    addtocart = st.button("Add to Cart", disabled = True)
+    addtocart = st.button("Add to Cart", disabled = True, on_click= balloons)
 
     
     # ---- VIEW CART ----
@@ -216,27 +145,3 @@ with rightcol:
     # ---- BACK TO HOME ----
     if st.button("Return to home"):
         switch_page("Home")
-
-
-
-
-#####################
-
-
-
-#""" Data Source   """
-#web location for csv file, 'df.csv'
-data_src = r'https://raw.githubusercontent.com/clueple/free_resources/master/df.csv'
-# data_src = r'https://github.com/clueple/free_resources/blob/master/df.csv'
-
-#web location for csv file, 'dfc.csv'
-data_src1 = r'https://raw.githubusercontent.com/clueple/free_resources/master/dfc.csv'
-# data_src1 = r'https://github.com/clueple/free_resources/blob/master/dfc.csv'
-
-
-#""" test folder  """
-file_dir = r'd:/Downloads'
-file_name = 'df1.csv'
-
-filepath = f"{file_dir}/{file_name}"
-

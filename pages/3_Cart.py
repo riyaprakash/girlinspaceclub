@@ -134,7 +134,7 @@ st.subheader("Contact us:")
 with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
         contact_form = """
-        <form action="https://formsubmit.co/jnblume2@yahoo.com" method="POST">
+        <form action="https://formsubmit.co/sabrina.thompson@girlinspaceclub.com" method="POST">
             <input type="hidden" name="_captcha" value="false">
             <input type="word" name="name" placeholder="Your name" required>
             <input type="em" name="email" placeholder="Your email" required>
