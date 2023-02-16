@@ -5,7 +5,7 @@ import random
 from streamlit.components.v1 import html 
 from pathlib import Path
 
-
+##allows users to navigate through pages using buttons instead of sidebar
 def nav_page(page_name, timeout_secs=3):
     nav_script = """
         <script type="text/javascript">
@@ -31,6 +31,7 @@ def nav_page(page_name, timeout_secs=3):
     """ % (page_name, timeout_secs)
     html(nav_script)
 
+##verifies if phone number is numeric and 10 digits
 def phone_verif(number):
     if number.isnumeric() and len(number)==10:
         return True
@@ -47,6 +48,7 @@ hide_streamlit_style = """
   """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+##link to payment page
 stripe_checkout = "https://buy.stripe.com/test_eVa16wgok9VUcMMcMM"
 
 
@@ -56,6 +58,7 @@ with st.container():
 
 left, right = st.columns(2, gap = "large")
 
+##sample orders
 with left:
     st.write("##")
     with st.expander("ORDER 1: Riya's Suit"):
@@ -75,19 +78,16 @@ with right:
         params = {'email': email_address})
 
     status = response.json()['status']
-    ##if status == "valid":
-        ##st.write("email is valid")
-    ##elif status == "invalid":
-        ##st.write("email is invalid")
     
-    #Phone number input
+    #Phone number input and verification
     phone = st.text_input("Phone Number", placeholder="Optional")
     phone_error = False
     if not (phone_verif(phone)):
         phone_error = True
     
 
-
+    ##continue to payment button
+    ##only enabled if no errors are existant
     with open('style.css') as f:
             st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
 
@@ -130,7 +130,7 @@ st.subheader("Contact us:")
 
 
 
-# Documention: https://formsubmit.co/ !!! CHANGE EMAIL ADDRESS !!!
+# Documention: https://formsubmit.co/ 
 with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
         contact_form = """

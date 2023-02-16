@@ -43,6 +43,7 @@ input[type=mess], input[type=em], input[type=word], textarea {
     background-color: #104f97;
   }
   
+  /*disable button and make unclickable*/
   .disabled{
     pointer-events: none;
     cursor: not-allowed;
